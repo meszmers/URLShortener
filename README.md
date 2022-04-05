@@ -1,6 +1,6 @@
 To run this project:
 1. composer install<br /><br />
-2. Change this data to your MYSQL ap\Database.php: <br />
+2. Change this data to your MYSQL at:  ap\Database.php : <br />
 [ 'dbname' => 'DATABASE_NAME', <br />
    'user' => 'USER', <br />
    'password' => 'PASSWORD', <br />
