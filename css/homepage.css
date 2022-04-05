@@ -1,0 +1,14 @@
+.centered{
+    margin-left: auto;
+
+    text-align: center;
+    padding: 10px;
+}
+.margin {
+    margin-top: 200px;
+}
+.short {
+    padding-right: 20px;
+}
+
+
