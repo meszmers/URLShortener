@@ -1,4 +1,4 @@
-To run theis project:
+To run this project:
 1. composer install<br /><br />
 2. Change this data to your MYSQL ap\Database.php: <br />
 [ 'dbname' => 'DATABASE_NAME', <br />
