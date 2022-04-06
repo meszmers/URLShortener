@@ -39,7 +39,13 @@ class URLController
     public function redirect($vars)
     {
         $url = (new IndexURLService())->execute(new IndexURLRequest($this->path, $vars["short"]));
-        header('Location: ' . $url->getLongUrl());
+
+        if ($url !== null) {
+            header('Location: ' . $url->getLongUrl());
+        } else {
+            header('Location: /short' );
+        }
+
     }
 
 

@@ -15,7 +15,7 @@ class IndexURLService
         $this->URLRepository = new PDO_URLRepository;
     }
 
-    public function execute(IndexURLRequest $request): URL
+    public function execute(IndexURLRequest $request): ?URL
     {
         return $this->URLRepository->index($request);
     }

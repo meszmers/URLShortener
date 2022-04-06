@@ -2,6 +2,7 @@
 
 namespace App\Repositories\URL;
 
+
 use App\Models\URL;
 use App\Services\URL\IndexURLRequest;
 use App\Services\URL\ShortenURLRequest;
@@ -12,5 +13,5 @@ interface URLRepository
 
     public function fetchLast(int $number): array;
 
-    public function index(IndexURLRequest $request): URL;
+    public function index(IndexURLRequest $request): ?URL;
 }

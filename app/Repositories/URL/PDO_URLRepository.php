@@ -49,7 +49,7 @@ class PDO_URLRepository implements URLRepository
         return $list;
     }
 
-    public function index(IndexURLRequest $request): URL
+    public function index(IndexURLRequest $request): ?URL
     {
         try {
             $data = Database::connection()->fetchAssociative('SELECT * FROM URL WHERE short_url = ?', [$request->getPath() . $request->getShortURL()]);
@@ -58,7 +58,10 @@ class PDO_URLRepository implements URLRepository
             die;
         }
 
-
-        return new URL($data['id'], $data['long_url'], $data['short_url']);
+        if($data["id"] !== null && $data["long_url"] !== null && $data["short_url"] !== null) {
+            return new URL($data['id'], $data['long_url'], $data['short_url']);
+        } else {
+            return null;
+        }
     }
 }
