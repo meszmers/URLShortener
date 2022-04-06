@@ -11,26 +11,36 @@ use Exception;
 
 class URLController
 {
+    private string $path;
 
-    private string $path = 'http://localhost:8000/';
+    public function __construct()
+    {
+        if (empty($_ENV['PATH'])) {
+            $this->path = 'http://localhost:8000/';
+        } else {
+            $this->path = $_ENV['PATH'];
+        }
+    }
 
-    public function shorten()
+    public function shorten(): Redirect
     {
         try {
             $bytes = random_bytes(6);
             $short = bin2hex($bytes);
 
+            $longURL = $_POST["long_url"];
+            $shortURL = $this->path . $short;
+            $this->validateURL($longURL);
+
+            if (empty($_SESSION["errors"])) {
+                (new ShortenURLService())->execute(new ShortenURLRequest($longURL, $shortURL));
+            }
+
+
         } catch (Exception $exception) {
-            echo "Bytes Exception: " . $exception->getMessage();
-            die;
-        }
 
-        $longURL = $_POST["long_url"];
-        $shortURL = $this->path . $short;
-        $this->validateURL($longURL);
+            $_SESSION['errors'] = "Unexpected Error";
 
-        if (empty($_SESSION["errors"])) {
-            (new ShortenURLService())->execute(new ShortenURLRequest($longURL, $shortURL));
         }
         return new Redirect('/short');
     }
@@ -43,9 +53,8 @@ class URLController
         if ($url !== null) {
             header('Location: ' . $url->getLongUrl());
         } else {
-            header('Location: /short' );
+            header('Location: /short');
         }
-
     }
 
 
@@ -55,5 +64,4 @@ class URLController
             $_SESSION["errors"] = "Website not valid";
         }
     }
-
 }

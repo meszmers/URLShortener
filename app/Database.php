@@ -14,11 +14,11 @@ class Database
     {
         if (self::$connection === null) {
             $connectionParams = [
-                'dbname' => 'URLShortener',
-                'user' => 'root',
-                'password' => 'password',
-                'host' => 'localhost',
-                'driver' => 'pdo_mysql',
+                'dbname' => $_ENV['DBNAME'],
+                'user' => $_ENV['USER'],
+                'password' => $_ENV['PASSWORD'],
+                'host' => $_ENV['HOST'],
+                'driver' => $_ENV['DRIVER'],
             ];
 
             try {
