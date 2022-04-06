@@ -2,7 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
-use App\Controllers\URLController;
+
 use App\Redirect;
 use App\View;
 use Twig\Environment;
@@ -11,6 +11,7 @@ use Twig\Loader\FilesystemLoader;
 session_start();
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '.env');
 $dotenv->load();
+
 
 
 $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {

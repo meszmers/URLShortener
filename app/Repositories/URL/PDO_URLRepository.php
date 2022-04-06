@@ -4,39 +4,41 @@ namespace App\Repositories\URL;
 
 use App\Database;
 use App\Models\URL;
+use App\Services\URL\FetchLastURLRequest;
 use App\Services\URL\IndexURLRequest;
 use App\Services\URL\ShortenURLRequest;
 use Doctrine\DBAL\Exception;
 
 class PDO_URLRepository implements URLRepository
 {
+    private string $path;
+
+    public function __construct()
+    {
+        $this->path = 'http'.'://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].'/' ;
+    }
+
     public function shorten(ShortenURLRequest $request): void
     {
         try {
-            $check = Database::connection()->fetchAssociative('SELECT short_url FROM URL WHERE short_url = ?', [$request->getShortUrl()]);
-        } catch (Exception $exception) {
-            echo "Database Exception: " . $exception->getMessage();
-            die;
-        }
+            $check = Database::connection()->fetchAssociative('SELECT hash FROM URL WHERE hash = ?', [$request->getHash()]);
 
-
-        if (empty($check)) {
-            try {
+            if (empty($check)) {
                 Database::connection()->insert('URL', [
                     'long_url' => $request->getLongUrl(),
-                    'short_url' => $request->getShortUrl()
+                    'hash' => $request->getHash()
                 ]);
-            } catch (Exception $exception) {
-                echo "Database Exception: " . $exception->getMessage();
-                die;
             }
+
+        } catch (Exception $exception) {
+            echo "Database Exception: " . $exception->getMessage();
         }
     }
 
-    public function fetchLast(int $number): array
+    public function fetchLast(FetchLastURLRequest $request): array
     {
         try {
-            $allData = Database::connection()->fetchAllAssociative('SELECT * FROM (SELECT * FROM URL ORDER BY id DESC LIMIT ' . $number . ') sub ORDER BY id DESC ');
+            $allData = Database::connection()->fetchAllAssociative('SELECT * FROM (SELECT * FROM URL ORDER BY id DESC LIMIT ' .$request->getNumber(). ') sub ORDER BY id DESC ');
         } catch (Exception $exception) {
             echo "Database Exception: " . $exception->getMessage();
             die;
@@ -44,7 +46,7 @@ class PDO_URLRepository implements URLRepository
 
         $list = [];
         foreach ($allData as $data) {
-            $list[] = new URL($data["id"], $data["long_url"], $data["short_url"]);
+            $list[] = new URL($data["id"], $data["long_url"], ($this->path .$data["hash"]));
         }
         return $list;
     }
@@ -52,14 +54,14 @@ class PDO_URLRepository implements URLRepository
     public function index(IndexURLRequest $request): ?URL
     {
         try {
-            $data = Database::connection()->fetchAssociative('SELECT * FROM URL WHERE short_url = ?', [$request->getPath() . $request->getShortURL()]);
+            $data = Database::connection()->fetchAssociative('SELECT * FROM URL WHERE hash = ?', [$request->getShortURL()]);
         } catch (Exception $exception) {
             echo "Database Exception: " . $exception->getMessage();
             die;
         }
 
-        if($data["id"] !== null && $data["long_url"] !== null && $data["short_url"] !== null) {
-            return new URL($data['id'], $data['long_url'], $data['short_url']);
+        if($data["id"] !== null && $data["long_url"] !== null && $data["hash"] !== null) {
+            return new URL($data['id'], $data['long_url'], ($this->path . $data['hash']));
         } else {
             return null;
         }

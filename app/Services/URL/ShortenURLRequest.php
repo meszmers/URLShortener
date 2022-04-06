@@ -5,22 +5,23 @@ namespace App\Services\URL;
 class ShortenURLRequest
 {
     private string $longUrl;
-    private string $shortUrl;
+    private string $hash;
 
-    public function __construct(string $longUrl, string $shortUrl)
+
+    public function __construct(string $longUrl, string $hash)
     {
         $this->longUrl = $longUrl;
-        $this->shortUrl = $shortUrl;
+
+        $this->hash = $hash;
     }
 
     /**
      * @return string
      */
-    public function getShortUrl(): string
+    public function getHash(): string
     {
-        return $this->shortUrl;
+        return $this->hash;
     }
-
     /**
      * @return string
      */

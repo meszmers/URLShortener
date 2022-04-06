@@ -5,12 +5,11 @@ namespace App\Services\URL;
 class IndexURLRequest
 {
     private string $shortURL;
-    private string $path;
 
-    public function __construct(string $path, string $shortURL)
+    public function __construct(string $shortURL)
     {
         $this->shortURL = $shortURL;
-        $this->path = $path;
+
     }
 
     /**
@@ -21,11 +20,4 @@ class IndexURLRequest
         return $this->shortURL;
     }
 
-    /**
-     * @return string
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
 }

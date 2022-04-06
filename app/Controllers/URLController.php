@@ -11,44 +11,25 @@ use Exception;
 
 class URLController
 {
-    private string $path;
-
-    public function __construct()
-    {
-        if (empty($_ENV['PATH'])) {
-            $this->path = 'http://localhost:8000/';
-        } else {
-            $this->path = $_ENV['PATH'];
-        }
-    }
 
     public function shorten(): Redirect
     {
-        try {
-            $bytes = random_bytes(6);
-            $short = bin2hex($bytes);
+        $longURL = $_POST["long_url"];
+        $this->validateURL($longURL);
 
-            $longURL = $_POST["long_url"];
-            $shortURL = $this->path . $short;
-            $this->validateURL($longURL);
+        $hash = $this->generateHash();
 
-            if (empty($_SESSION["errors"])) {
-                (new ShortenURLService())->execute(new ShortenURLRequest($longURL, $shortURL));
-            }
-
-
-        } catch (Exception $exception) {
-
-            $_SESSION['errors'] = "Unexpected Error";
-
+        if (empty($_SESSION["errors"])) {
+            (new ShortenURLService())->execute(new ShortenURLRequest($longURL, $hash));
         }
+
         return new Redirect('/short');
     }
 
 
     public function redirect($vars)
     {
-        $url = (new IndexURLService())->execute(new IndexURLRequest($this->path, $vars["short"]));
+        $url = (new IndexURLService())->execute(new IndexURLRequest($vars["short"]));
 
         if ($url !== null) {
             header('Location: ' . $url->getLongUrl());
@@ -63,5 +44,16 @@ class URLController
         if (filter_var($longURL, FILTER_VALIDATE_URL) === false) {
             $_SESSION["errors"] = "Website not valid";
         }
+    }
+
+    private function generateHash(): ?string {
+        try {
+            $bytes = random_bytes(6);
+            return bin2hex($bytes);
+        } catch (Exception $exception) {
+            $_SESSION['errors'] = 'Unexpected Error';
+            return null;
+        }
+
     }
 }

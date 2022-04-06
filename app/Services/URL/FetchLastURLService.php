@@ -14,8 +14,8 @@ class FetchLastURLService
         $this->URLRepository = new PDO_URLRepository;
     }
 
-    public function execute(int $number): array
+    public function execute(FetchLastURLRequest $request): array
     {
-        return $this->URLRepository->fetchLast($number);
+        return $this->URLRepository->fetchLast($request);
     }
 }
