@@ -2,16 +2,15 @@
 
 namespace App\Services\URL;
 
-use App\Repositories\URL\PDO_URLRepository;
 use App\Repositories\URL\URLRepository;
 
 class FetchLastURLService
 {
     private URLRepository $URLRepository;
 
-    public function __construct()
+    public function __construct(URLRepository $URLRepository)
     {
-        $this->URLRepository = new PDO_URLRepository;
+        $this->URLRepository = $URLRepository;
     }
 
     public function execute(FetchLastURLRequest $request): array

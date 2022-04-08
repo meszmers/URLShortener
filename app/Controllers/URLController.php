@@ -8,9 +8,16 @@ use App\Services\URL\IndexURLService;
 use App\Services\URL\ShortenURLRequest;
 use App\Services\URL\ShortenURLService;
 use Exception;
+use Psr\Container\ContainerInterface;
 
 class URLController
 {
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     public function shorten(): Redirect
     {
@@ -20,7 +27,7 @@ class URLController
         $hash = $this->generateHash();
 
         if (empty($_SESSION["errors"])) {
-            (new ShortenURLService())->execute(new ShortenURLRequest($longURL, $hash));
+                $this->container->get(ShortenURLService::class)->execute(new ShortenURLRequest($longURL, $hash));
         }
 
         return new Redirect('/short');
@@ -29,7 +36,8 @@ class URLController
 
     public function redirect($vars)
     {
-        $url = (new IndexURLService())->execute(new IndexURLRequest($vars["short"]));
+
+        $url = $this->container->get(IndexURLService::class)->execute(new IndexURLRequest($vars["short"]));
 
         if ($url !== null) {
             header('Location: ' . $url->getLongUrl());

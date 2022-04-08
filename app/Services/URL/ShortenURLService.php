@@ -2,7 +2,6 @@
 
 namespace App\Services\URL;
 
-use App\Repositories\URL\PDO_URLRepository;
 use App\Repositories\URL\URLRepository;
 
 class ShortenURLService
@@ -10,9 +9,9 @@ class ShortenURLService
 
     private URLRepository $URLRepository;
 
-    public function __construct()
+    public function __construct(URLRepository $URLRepository)
     {
-        $this->URLRepository = new PDO_URLRepository;
+        $this->URLRepository = $URLRepository;
     }
 
     public function execute(ShortenURLRequest $request): void

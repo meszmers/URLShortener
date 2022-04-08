@@ -12,7 +12,6 @@ class FetchLastURLRequest {
 
     }
 
-
     /**
      * @return string
      */

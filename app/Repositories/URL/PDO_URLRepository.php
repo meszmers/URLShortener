@@ -2,7 +2,8 @@
 
 namespace App\Repositories\URL;
 
-use App\Database;
+
+use App\Database\DatabasePDO;
 use App\Models\URL;
 use App\Services\URL\FetchLastURLRequest;
 use App\Services\URL\IndexURLRequest;
@@ -21,26 +22,26 @@ class PDO_URLRepository implements URLRepository
     public function shorten(ShortenURLRequest $request): void
     {
         try {
-            $check = Database::connection()->fetchAssociative('SELECT hash FROM URL WHERE hash = ?', [$request->getHash()]);
+            $check = DatabasePDO::connection()->fetchAssociative('SELECT hash FROM URL WHERE hash = ?', [$request->getHash()]);
 
             if (empty($check)) {
-                Database::connection()->insert('URL', [
+                DatabasePDO::connection()->insert('URL', [
                     'long_url' => $request->getLongUrl(),
                     'hash' => $request->getHash()
                 ]);
             }
 
         } catch (Exception $exception) {
-            echo "Database Exception: " . $exception->getMessage();
+            echo "DatabasePDO Exception: " . $exception->getMessage();
         }
     }
 
     public function fetchLast(FetchLastURLRequest $request): array
     {
         try {
-            $allData = Database::connection()->fetchAllAssociative('SELECT * FROM (SELECT * FROM URL ORDER BY id DESC LIMIT ' .$request->getNumber(). ') sub ORDER BY id DESC ');
+            $allData = DatabasePDO::connection()->fetchAllAssociative('SELECT * FROM (SELECT * FROM URL ORDER BY id DESC LIMIT ' .$request->getNumber(). ') sub ORDER BY id DESC ');
         } catch (Exception $exception) {
-            echo "Database Exception: " . $exception->getMessage();
+            echo "DatabasePDO Exception: " . $exception->getMessage();
             die;
         }
 
@@ -54,9 +55,9 @@ class PDO_URLRepository implements URLRepository
     public function index(IndexURLRequest $request): ?URL
     {
         try {
-            $data = Database::connection()->fetchAssociative('SELECT * FROM URL WHERE hash = ?', [$request->getShortURL()]);
+            $data = DatabasePDO::connection()->fetchAssociative('SELECT * FROM URL WHERE hash = ?', [$request->getHash()]);
         } catch (Exception $exception) {
-            echo "Database Exception: " . $exception->getMessage();
+            echo "DatabasePDO Exception: " . $exception->getMessage();
             die;
         }
 

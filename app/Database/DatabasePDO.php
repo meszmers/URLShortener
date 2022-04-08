@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
 
-class Database
+class DatabasePDO
 {
     private static ?Connection $connection = null;
 

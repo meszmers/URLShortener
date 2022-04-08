@@ -4,20 +4,22 @@ namespace App\Services\URL;
 
 class IndexURLRequest
 {
-    private string $shortURL;
 
-    public function __construct(string $shortURL)
+
+    private string $hash;
+
+    public function __construct(string $hash)
     {
-        $this->shortURL = $shortURL;
 
+        $this->hash = $hash;
     }
 
     /**
      * @return string
      */
-    public function getShortURL(): string
+    public function getHash(): string
     {
-        return $this->shortURL;
+        return $this->hash;
     }
 
 }
