@@ -22,9 +22,10 @@ class URLController
     public function shorten(): Redirect
     {
         $longURL = $_POST["long_url"];
+        $hash = $this->generateHash();
+
         $this->validateURL($longURL);
 
-        $hash = $this->generateHash();
 
         if (empty($_SESSION["errors"])) {
                 $this->container->get(ShortenURLService::class)->execute(new ShortenURLRequest($longURL, $hash));
