@@ -22,7 +22,7 @@ $dotenv->load();
 /*
  * Construct database based on .env input
 */
-$database = trim('App\Repositories\URL\ ') . $_ENV['DATABASE'];
+$database = trim('App\Repositories\URL\ ') . $_ENV['REPOSITORY'];
 
 /*
  * Build a container
@@ -36,8 +36,8 @@ $container = $builder->build();
 /*
  * Creating a new file if file dose not exists.
 */
-if($_ENV['DATABASE'] === 'JSON_URLRepository' && !file_exists($_ENV['FILE_PATH_JSON'] . $_ENV['FILE_NAME_JSON'])) {
-    $fileName = $_ENV['FILE_PATH_JSON'] . $_ENV['FILE_NAME_JSON'];
+if($_ENV['DATABASE'] === 'JSON_URLRepository' && !file_exists(('public/' . $_ENV['FILE_NAME_JSON']))) {
+    $fileName = ('public/' . $_ENV['FILE_NAME_JSON']);
     file_put_contents($fileName, json_encode([]));
 }
 
@@ -48,7 +48,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/short', [App\Controllers\WebsiteController::class, "short"]);
     $r->addRoute('GET', '/long', [App\Controllers\WebsiteController::class, "long"]);
 
-    //URL Routs
+    //URL Routes
     $r->addRoute('POST', '/shorten', [App\Controllers\URLController::class, "shorten"]);
     $r->addRoute('POST', '/longURL', [App\Controllers\URLController::class, "longURL"]);
     $r->addRoute('GET', '/{short}', [App\Controllers\URLController::class, "redirect"]);

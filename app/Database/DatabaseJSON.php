@@ -8,7 +8,7 @@ class DatabaseJSON {
 
     public function __construct()
     {
-        $this->filename = $_ENV['FILE_PATH_JSON'] . $_ENV['FILE_NAME_JSON'];
+        $this->filename = 'public/' . $_ENV['FILE_NAME_JSON'];
     }
 
     public function connection(): ?array {
