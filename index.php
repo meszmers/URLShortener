@@ -25,7 +25,7 @@ $dotenv->load();
 $database = trim('App\Repositories\URL\ ') . $_ENV['DATABASE'];
 
 /*
- * Build a container to access
+ * Build a container
 */
 $builder = new ContainerBuilder();
 $builder->addDefinitions([
