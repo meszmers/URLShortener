@@ -24,7 +24,10 @@ class URLController
         $longURL = $_POST["long_url"];
         $hash = $this->generateHash();
 
-        $this->validateURL($longURL);
+
+        if($this->validateURL($longURL)) {
+            $_SESSION["errors"] = "Website not valid";
+        }
 
 
         if (empty($_SESSION["errors"])) {
@@ -48,18 +51,19 @@ class URLController
     }
 
 
-    private function validateURL(string $longURL)
+    public function validateURL(string $longURL): bool
     {
         if (filter_var($longURL, FILTER_VALIDATE_URL) === false) {
-            $_SESSION["errors"] = "Website not valid";
+            return true;
         }
+        return false;
     }
 
-    private function generateHash(): ?string {
+    public function generateHash(): ?string {
         try {
             $bytes = random_bytes(6);
             return bin2hex($bytes);
-        } catch (Exception $exception) {
+        } catch (Exception $e) {
             $_SESSION['errors'] = 'Unexpected Error';
             return null;
         }

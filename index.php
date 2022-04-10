@@ -36,7 +36,7 @@ $container = $builder->build();
 /*
  * Creating a new file if file dose not exists.
 */
-if($_ENV['DATABASE'] === 'JSON_URLRepository' && !file_exists(('public/' . $_ENV['FILE_NAME_JSON']))) {
+if($_ENV['REPOSITORY'] === 'JSON_URLRepository' && !file_exists(('public/' . $_ENV['FILE_NAME_JSON']))) {
     $fileName = ('public/' . $_ENV['FILE_NAME_JSON']);
     file_put_contents($fileName, json_encode([]));
 }

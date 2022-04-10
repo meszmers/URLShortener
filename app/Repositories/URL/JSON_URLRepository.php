@@ -39,7 +39,7 @@ class JSON_URLRepository implements URLRepository {
     public function fetchLast(FetchLastURLRequest $request): array
     {
 
-        $tempArray = array_reverse($this->data);
+        $tempArray = $this->data;
         $data = [];
 
         $k = array_keys($tempArray);
